@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+
+    <div class="container">
+        <div class="row">
+            <form action="">
+                <p id="message"></p>
+                <input type="text" name="url" class="form-control" id="text" placeholder="Link..."><br>
+                <input type="submit" value="Qidirish" class="form-control btn btn-primary">
+            </form>
+        </div>
+        <br><br>
+        <div class="row" id="root">
+           
+        </div>
+    </div>
+
+    
+    <script>
+
+        function like() {
+            let like = document.querySelector('.fa-heart');
+            like.style.color = "red";
+        }
+        fetch('https://api.unsplash.com/search/photos?client_id=M4tosJ0ZVtdOsBKPnaDIMQ3ik-IZf1OlhOWMIGfwSJw&query=taxi')
+        .then((response) => response.json())
+        .then((result) => {
+            let results = result.results;
+            let card = document.querySelector('#root')
+
+
+            // results.sort(function (a,b) {
+            //     if(a.likes > b.likes) return -1;
+            //     if(a.likes == b.likes) return 0;
+            //     if(a.likes < b.likes) return 1;
+            // });
+            results.sort( function (c,d) {
+                if(c.created_at > d.created_at) return -1;
+                if(c.created_at == d.created_at) return 0;
+                if(c.created_at < d.created_at) return 1;
+            })
+
+
+           
+            results.map(function(item){
+                console.log(item.urls.full);
+                card.innerHTML += `
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                            </div>
+                            <a href="${item.urls.full}" target="blank" download="">
+                                <img download src="${item.urls.full}" class="card-img-top">
+                            </a>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" style="font-size: 21px; letter-spacing: 5px;">
+                                    <i onclick="like()" class="fa-regular fa-heart"></i>
+                                    <i class="fa-regular fa-comment"></i>
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </li>
+                                <li class="list-group-item">
+                                    <i>Liked by users and <b>${item.likes}</b> others</i>
+                                </li>
+                                <li class="list-group-item">
+                                    <h6>${item.alt_description}</h6>
+                                </li>
+                                <li class="list-group-item">
+                                    <i>${item.created_at}</i>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+            `;      
+            });
+        });
+
+    </script>
+
+</body>
+</html>
